@@ -1,0 +1,22 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:myapp/Constant/ConstantService'
+
+
+class AuthBll {
+  final String api = ConstanstAplication.SERVER_API;
+  Future<String> login(String email, String password) async {
+    //String token = '';
+    final String loginUrl = '$api/auth/login';
+    final response = await http.post(Uri.parse(loginUrl), body: {
+      'username': email,
+      'password': password,
+    });
+    if (response.statusCode == 200) {
+      var responseBody = jsonDecode(response.body);
+      return responseBody;
+    } else {
+      throw Exception('Failed to Login');
+    }
+  }
+}
