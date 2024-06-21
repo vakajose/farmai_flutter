@@ -1,10 +1,30 @@
+import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/Constant/ConstantService.dart';
+import 'package:myapp/util/shared_preferences.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
 
-@override
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+
+  late String user_id;
+  @override
+  void initState() {
+    _init();
+    super.initState();
+  }
+
+  _init()async{
+    user_id = await SharedPref.getString(ConstanstAplication.USER) ?? "";
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -87,9 +107,9 @@ class HomeView extends StatelessWidget {
                 }).toList(),
               ),
               const SizedBox(height: 20),
-              const Text(
-                'Bienvenido a la Página Principal',
-                style: TextStyle(
+              Text(
+                'Bienvenido $user_id a la Página Principal',
+                style:const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: Colors.blue,

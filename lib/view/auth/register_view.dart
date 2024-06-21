@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/bll/auth/AuthBll.dart';
 
 class RegisterView extends StatelessWidget {
    RegisterView({super.key});
@@ -69,6 +70,7 @@ class RegisterView extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     prefixIcon: Icon(Icons.lock),
+
                   ),
                   obscureText: true,
                 ),
@@ -81,7 +83,7 @@ class RegisterView extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                   // _login(context, emailController.text, passwordController.text)
+                    _signup(context, emailController.text, passwordController.text);
                   },
                   child: const Text(
                     'Regístrate',
@@ -110,7 +112,7 @@ class RegisterView extends StatelessWidget {
     );
   }
 
-  /* Future<void> _login(BuildContext context, String email, String password) async {
+  Future<void> _signup(BuildContext context, String email, String password) async {
     AuthBll authBll = AuthBll();
     if(email.isEmpty || password.isEmpty){
       final snackBar = SnackBar(content: Text('Por favor, ingrese su correo y contraseña'));
@@ -118,16 +120,22 @@ class RegisterView extends StatelessWidget {
       return;
     }
     try {
-      var token = await authBll.login(email, password);
-      print('Token: $token');
-      if (token != null && token.isNotEmpty) {
-        Navigator.of(context).pushNamed("/");
-      }else{
-        final snackBar = SnackBar(content: Text('Credenciales inválidas'));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
+      String registeredUsername = await authBll.register(email, password);
+      // Registro exitoso
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Usuario $registeredUsername registrado con éxito')),
+      );
+      Navigator.pushNamedAndRemoveUntil(context, '/login',  (Route<dynamic> route) => false);
+    } on RegistrationException catch (e) {
+      // Error específico de registro
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error de registro: ${e.message}')),
+      );
     } catch (e) {
-      print(e);
+      // Otros errores
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error inesperado: $e')),
+      );
     }
-  } */
+  }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/bll/auth/authBll';
+import 'package:myapp/bll/auth/AuthBll.dart';
 
 class LoginView extends StatelessWidget {
   LoginView({super.key});
@@ -106,16 +106,17 @@ class LoginView extends StatelessWidget {
       return;
     }
     try {
-      var response = await authBll.login(email, password);
-      print('Response: $response');
-      if (response != null && response.isNotEmpty) {
-        Navigator.of(context).pushNamed("/");
-      }else{
-        final snackBar = SnackBar(content: Text('Credenciales inválidas'));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
+       await authBll.login(email, password);
+      Navigator.of(context).pushNamedAndRemoveUntil('/home',  (Route<dynamic> route) => false);
+    } on UnauthorizedException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Usuario o contraseña incorrectos')),
+      );
     } catch (e) {
       print(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error de conexión: $e')),
+      );
     }
   }
 }
