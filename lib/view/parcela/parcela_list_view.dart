@@ -8,6 +8,20 @@ class ParcelaListView extends StatefulWidget {
 }
 
 class _ParcelaListViewState extends State<ParcelaListView> {
+
+  late int tipo;
+  late String user_id;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+    tipo = args?['tipo'] as int? ?? 0;
+    user_id = args?['user_id'] as String? ?? '';
+    print('Tipo: $tipo');
+    print('User ID: $user_id');
+  }
+
   final List<Parcela> parcelas = [
     Parcela('Parcela Amanecer', 'Cultivo de Maíz', 15.5, () => print('Ver Parcela 1')),
     Parcela('Parcela Atardecer', 'Cultivo de Trigo', 20.2, () => print('Ver Parcela 2')),
@@ -80,8 +94,11 @@ class _ParcelaListViewState extends State<ParcelaListView> {
                         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       ),
                       onPressed:() {
-                        //Navigator.of(context).pushNamed('/mapsParcelas');
-                        Navigator.of(context).pushNamed('/analisis');
+                        if(this.tipo == 1) {
+                          Navigator.of(context).pushNamed('/mapsParcelas');
+                        }else {
+                          Navigator.of(context).pushNamed('/analisis');
+                        }
                       },
                     ),
                   ),
