@@ -5,6 +5,8 @@ import 'package:myapp/util/shared_preferences.dart';
 import 'package:myapp/view/auth/login_view.dart';
 import 'package:myapp/view/auth/register_view.dart';
 import 'package:myapp/view/home/home_view.dart';
+import 'package:myapp/view/parcela/parcela_list_view.dart';
+import 'package:myapp/view/parcela/parcela_maps_view.dart';
 
 void main() async{
   HttpOverrides.global = new MyHttpOverrides();
@@ -20,13 +22,15 @@ class MyApp extends StatelessWidget {
     '/home': (context) => HomeView(),
     '/login': (context) => LoginView(),
     '/signup': (context) => RegisterView(),
+    '/parcela': (context) => ParcelaListView(),
+    '/mapsParcelas': (context) => ParcelaMapsView(),
   };
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      initialRoute: '/login',
+      initialRoute: '/home',
       routes: _routes,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
