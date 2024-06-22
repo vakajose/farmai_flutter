@@ -150,19 +150,23 @@ Investigar y tratar las áreas de bajo NDVI, ajustando riego o fertilización en
               colors: [Colors.white, Colors.green[50]!],
             ),
           ),
-          child: Column(
-            children: [
-              Markdown(
-                data: _markdownData,
-                shrinkWrap: true,
-                styleSheet: MarkdownStyleSheet(
-                  h1: TextStyle(fontSize: 20, color: Colors.green[800], fontWeight: FontWeight.bold),
-                  h2: TextStyle(fontSize: 18, color: Colors.green[700], fontWeight: FontWeight.bold),
-                  p: TextStyle(fontSize: 16, color: Colors.green[800]),
-                  listBullet: TextStyle(color: Colors.green[800]),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxHeight: 400),
+                  child: Markdown(
+                    data: _markdownData,
+                    styleSheet: MarkdownStyleSheet(
+                      h1: TextStyle(fontSize: 20, color: Colors.green[800], fontWeight: FontWeight.bold),
+                      h2: TextStyle(fontSize: 18, color: Colors.green[700], fontWeight: FontWeight.bold),
+                      p: TextStyle(fontSize: 16, color: Colors.green[800]),
+                      listBullet: TextStyle(color: Colors.green[800]),
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
