@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/bll/auth/AuthBll.dart';
 
@@ -41,7 +42,7 @@ class LoginView extends StatelessWidget {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    prefixIcon: Icon(Icons.email),
+                    prefixIcon: const Icon(Icons.email),
                   ),
                   keyboardType: TextInputType.emailAddress,
                 ),
@@ -53,7 +54,7 @@ class LoginView extends StatelessWidget {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    prefixIcon: Icon(Icons.lock),
+                    prefixIcon: const Icon(Icons.lock),
                   ),
                   obscureText: true,
                 ),
@@ -66,10 +67,11 @@ class LoginView extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    print("Login");
                     String email = emailController.text;
                     String password = passwordController.text;
-                    print("Email: $email, Password: $password");
+                    if (kDebugMode) {
+                      print("Email: $email, Password: $password");
+                    }
                     _login(context, email, password);
                   },
                   child: const Text(
@@ -101,14 +103,14 @@ class LoginView extends StatelessWidget {
   Future<void> _login(BuildContext context, String email, String password) async {
     AuthBll authBll = AuthBll();
     if(email.isEmpty || password.isEmpty){
-      final snackBar = SnackBar(content: Text('Por favor, ingrese su correo y contraseña'));
+      const snackBar = SnackBar(content: Text('Por favor, ingrese su correo y contraseña'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
       return;
     }
     try {
        await authBll.login(email, password);
       Navigator.of(context).pushNamedAndRemoveUntil('/home',  (Route<dynamic> route) => false);
-    } on UnauthorizedException catch (e) {
+    } on UnauthorizedException {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Usuario o contraseña incorrectos')),
       );

@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:myapp/util/shared_preferences.dart';
+import 'package:myapp/view/analisis/analisis_list.dart';
+import 'package:myapp/view/analisis/evaluacion_view.dart';
 import 'package:myapp/view/auth/login_view.dart';
 import 'package:myapp/view/auth/register_view.dart';
 import 'package:myapp/view/home/home_view.dart';
@@ -24,6 +26,8 @@ class MyApp extends StatelessWidget {
     '/signup': (context) => RegisterView(),
     '/parcela': (context) => ParcelaListView(),
     '/mapsParcelas': (context) => ParcelaMapsView(),
+    '/analisis': (context) => AnalisisListView(),
+    '/evaluacion': (context) => EvaluacionView(),
   };
 
   @override

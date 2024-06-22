@@ -19,7 +19,7 @@ class _ParcelaListViewState extends State<ParcelaListView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mis Parcelas', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Mis Parcelas', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white )),
         backgroundColor: Colors.green[700],
         elevation: 0,
       ),
@@ -79,7 +79,10 @@ class _ParcelaListViewState extends State<ParcelaListView> {
                         ),
                         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       ),
-                      onPressed: parcela.onVer,
+                      onPressed:() {
+                        //Navigator.of(context).pushNamed('/mapsParcelas');
+                        Navigator.of(context).pushNamed('/analisis');
+                      },
                     ),
                   ),
                 ),
