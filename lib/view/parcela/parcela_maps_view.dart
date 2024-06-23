@@ -39,7 +39,18 @@ class _ParcelaMapsViewState extends State<ParcelaMapsView> {
     location = locations[random.nextInt(locations.length)];
     crop = crops[random.nextInt(crops.length)];
   }
-  
+  List<LatLng> convertirUbicacionALatLng(List<Ubicacion>? ubicacion) {
+    if (ubicacion == null) {
+      return [];
+    }
+    return ubicacion.map((u) => LatLng(u.latitude!, u.longitude!)).toList();
+  }
+
+  @override
+  void initState() {
+    _generateRandomValues();
+    super.initState();
+  }
 
   @override
   void didChangeDependencies() {
@@ -51,14 +62,6 @@ class _ParcelaMapsViewState extends State<ParcelaMapsView> {
       _isLoading = false;
     }
   }
-
-  List<LatLng> convertirUbicacionALatLng(List<Ubicacion>? ubicacion) {
-    if (ubicacion == null) {
-      return [];
-    }
-   return ubicacion.map((u) => LatLng(u.latitude!, u.longitude!)).toList();
-  }
-
 
   @override
   Widget build(BuildContext context) {
