@@ -176,9 +176,20 @@ class _ParcelaMapsViewState extends State<ParcelaMapsView> {
             ),
           ),
           SizedBox(height: 8.0),
-          Text('Área: 500 Hectáreas'),
-          Text('Ubicación: Cotoca'),
-          Text('Cultivo: Maíz'),
+          Text(
+              'Área: $area Hectáreas',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Ubicación: $location',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Cultivo: $crop',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
         ],
       ),
     );
