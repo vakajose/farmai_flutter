@@ -1,9 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:myapp/Constant/ConstantService.dart';
+import 'package:myapp/dto/Analisis.dart';
 
-class EvaluacionView extends StatelessWidget {
+class EvaluacionView extends StatefulWidget {
   const EvaluacionView({super.key});
+
+  @override
+  State<EvaluacionView> createState() => _EvaluacionViewState();
+}
+
+class _EvaluacionViewState extends State<EvaluacionView> {
+  final urlApi = ConstanstAplication.SERVER_CDN;
+  late Analisis analisis;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+    analisis = args?['analisis'] as Analisis? ?? Analisis();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +48,7 @@ class EvaluacionView extends StatelessWidget {
                 const SizedBox(height: 20),
                 _buildSectionTitle('Detalles', context),
                 const SizedBox(height: 10),
-                _buildInfoCard(),
+                _buildInfoCard(analisis.evaluacion),
                 const SizedBox(height: 20),
               ],
             ),
@@ -48,10 +65,10 @@ class EvaluacionView extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: Text(
           title,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: Colors.green[800],
+            color: Colors.white,
           ),
         ),
       ),
@@ -59,11 +76,12 @@ class EvaluacionView extends StatelessWidget {
   }
 
   Widget _buildCarousel() {
-    final List<String> _carouselImages = [
-      'https://via.placeholder.com/800x400.png?text=Image+1',
-      'https://via.placeholder.com/800x400.png?text=Image+2',
-      'https://via.placeholder.com/800x400.png?text=Image+3',
-    ];
+
+    final List<String> _carouselImages = [];
+
+      for (var imagen in analisis.imagenes) {
+        _carouselImages.add(urlApi + imagen.ruta);
+      }
 
     return CarouselSlider(
       options: CarouselOptions(
@@ -107,8 +125,9 @@ class EvaluacionView extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoCard() {
-    final String _markdownData = '''
+  Widget _buildInfoCard(String evaluacionMarkdown) {
+    final String _markdownData = evaluacionMarkdown;
+    /*'''
 # Análisis NDVI: Campo de Maíz
 
 ## Datos del campo
@@ -133,7 +152,7 @@ class EvaluacionView extends StatelessWidget {
 
 ## Acción recomendada
 Investigar y tratar las áreas de bajo NDVI, ajustando riego o fertilización en zonas específicas.
-  ''';
+  ''';*/
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -173,3 +192,4 @@ Investigar y tratar las áreas de bajo NDVI, ajustando riego o fertilización en
     );
   }
 }
+

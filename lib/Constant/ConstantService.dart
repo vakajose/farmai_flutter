@@ -2,6 +2,7 @@ class ConstanstAplication {
   static const String appName = 'FarmAI';
   static const String appVersion = '1.0.0';
   static const String SERVER_API = 'http://backend.vakajose.live';
+  static const String SERVER_CDN = 'http://cdn.vakajose.live';
 
   static final String IMEI = "IMEI";
   static final String USER = "USER";

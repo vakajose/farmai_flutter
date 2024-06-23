@@ -1,34 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/bll/auth/AuthBll.dart';
 
-class RegisterView extends StatelessWidget {
-   RegisterView({super.key});
+class RegisterView extends StatefulWidget {
+  RegisterView({Key? key}) : super(key: key);
 
+  @override
+  _RegisterViewState createState() => _RegisterViewState();
+}
+
+class _RegisterViewState extends State<RegisterView> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final nameController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 50), // Espacio en la parte superior
-                const FlutterLogo(size: 100),
+                Image.asset(
+                  'assets/images/icon.png',
+                  height: 100,
+                ),
                 const SizedBox(height: 20),
                 Text(
                   'Crear Cuenta',
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
-                    color: Colors.blue.shade900,
+                    color: Colors.green.shade900,
                   ),
-                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 10),
                 Text(
@@ -37,16 +44,16 @@ class RegisterView extends StatelessWidget {
                     fontSize: 16,
                     color: Colors.grey.shade600,
                   ),
-                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 30),
                 TextField(
+                  controller: nameController,
                   decoration: InputDecoration(
                     labelText: 'Nombre',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    prefixIcon: Icon(Icons.person),
+                    prefixIcon: const Icon(Icons.person, color: Colors.green),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -57,7 +64,7 @@ class RegisterView extends StatelessWidget {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    prefixIcon: Icon(Icons.email),
+                    prefixIcon: const Icon(Icons.email, color: Colors.green),
                   ),
                   keyboardType: TextInputType.emailAddress,
                 ),
@@ -69,25 +76,27 @@ class RegisterView extends StatelessWidget {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    prefixIcon: Icon(Icons.lock),
-
+                    prefixIcon: const Icon(Icons.lock, color: Colors.green),
                   ),
                   obscureText: true,
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
+                _isLoading
+                    ? CircularProgressIndicator()
+                    : ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 50),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
+                    backgroundColor: Colors.green,
                   ),
                   onPressed: () {
                     _signup(context, emailController.text, passwordController.text);
                   },
                   child: const Text(
-                    'Regístrate',
-                    style: TextStyle(fontSize: 18),
+                    'Registrarse',
+                    style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -99,11 +108,13 @@ class RegisterView extends StatelessWidget {
                       onPressed: () {
                         Navigator.of(context).pushNamed("/login");
                       },
-                      child: const Text('Inicia Sesión'),
+                      child: const Text(
+                        'Inicia Sesión',
+                        style: TextStyle(color: Colors.green),
+                      ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 50),
               ],
             ),
           ),
@@ -114,28 +125,33 @@ class RegisterView extends StatelessWidget {
 
   Future<void> _signup(BuildContext context, String email, String password) async {
     AuthBll authBll = AuthBll();
-    if(email.isEmpty || password.isEmpty){
-      final snackBar = SnackBar(content: Text('Por favor, ingrese su correo y contraseña'));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor, ingrese su correo y contraseña')),
+      );
       return;
     }
+    setState(() {
+      _isLoading = true;
+    });
     try {
       String registeredUsername = await authBll.register(email, password);
-      // Registro exitoso
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Usuario $registeredUsername registrado con éxito')),
       );
-      Navigator.pushNamedAndRemoveUntil(context, '/login',  (Route<dynamic> route) => false);
+      Navigator.pushNamedAndRemoveUntil(context, '/login', (Route<dynamic> route) => false);
     } on RegistrationException catch (e) {
-      // Error específico de registro
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error de registro: ${e.message}')),
       );
     } catch (e) {
-      // Otros errores
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error inesperado: $e')),
       );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 }

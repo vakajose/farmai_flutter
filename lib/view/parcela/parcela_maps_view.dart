@@ -13,7 +13,7 @@ class ParcelaMapsView extends StatefulWidget {
 class _ParcelaMapsViewState extends State<ParcelaMapsView> {
   
   // Manejador del tipo de mapa
-  MapType _currentMapType = MapType.normal;
+  MapType _currentMapType = MapType.satellite;
   late Parcela _parcela;
   late String user_id;
   bool _isLoading = true;
@@ -178,17 +178,17 @@ class _ParcelaMapsViewState extends State<ParcelaMapsView> {
           SizedBox(height: 8.0),
           Text(
               'Área: $area Hectáreas',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
             ),
             SizedBox(height: 10),
             Text(
               'Ubicación: $location',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
             ),
             SizedBox(height: 10),
             Text(
               'Cultivo: $crop',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
             ),
         ],
       ),

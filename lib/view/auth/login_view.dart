@@ -2,10 +2,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/bll/auth/AuthBll.dart';
 
-class LoginView extends StatelessWidget {
+class LoginView extends StatefulWidget {
   LoginView({super.key});
+
+  @override
+  State<LoginView> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,14 +24,17 @@ class LoginView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const FlutterLogo(size: 100),
+                Image.asset(
+                  'assets/images/icon.png',
+                  height: 100,
+                ),
                 const SizedBox(height: 20),
                 Text(
                   'Bienvenido',
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
-                    color: Colors.blue.shade900,
+                    color: Colors.green.shade900,
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -42,7 +53,7 @@ class LoginView extends StatelessWidget {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    prefixIcon: const Icon(Icons.email),
+                    prefixIcon: const Icon(Icons.email, color: Colors.green),
                   ),
                   keyboardType: TextInputType.emailAddress,
                 ),
@@ -54,17 +65,20 @@ class LoginView extends StatelessWidget {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    prefixIcon: const Icon(Icons.lock),
+                    prefixIcon: const Icon(Icons.lock, color: Colors.green),
                   ),
                   obscureText: true,
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
+                _isLoading
+                    ? CircularProgressIndicator() // Indicador de carga
+                    : ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 50),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
+                    backgroundColor: Colors.green, // Color de botón
                   ),
                   onPressed: () {
                     String email = emailController.text;
@@ -76,7 +90,7 @@ class LoginView extends StatelessWidget {
                   },
                   child: const Text(
                     'Iniciar Sesión',
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -88,7 +102,10 @@ class LoginView extends StatelessWidget {
                       onPressed: () {
                         Navigator.of(context).pushNamed("/signup");
                       },
-                      child: const Text('Regístrate'),
+                      child: const Text(
+                        'Regístrate',
+                        style: TextStyle(color: Colors.green),
+                      ),
                     ),
                   ],
                 ),
@@ -102,14 +119,19 @@ class LoginView extends StatelessWidget {
 
   Future<void> _login(BuildContext context, String email, String password) async {
     AuthBll authBll = AuthBll();
-    if(email.isEmpty || password.isEmpty){
-      const snackBar = SnackBar(content: Text('Por favor, ingrese su correo y contraseña'));
+    if (email.isEmpty || password.isEmpty) {
+      const snackBar = SnackBar(
+          content: Text('Por favor, ingrese su correo y contraseña'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
       return;
     }
+    setState(() {
+      _isLoading = true; // Mostrar el indicador de carga
+    });
     try {
-       await authBll.login(email, password);
-      Navigator.of(context).pushNamedAndRemoveUntil('/home',  (Route<dynamic> route) => false);
+      await authBll.login(email, password);
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          '/home', (Route<dynamic> route) => false);
     } on UnauthorizedException {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Usuario o contraseña incorrectos')),
@@ -119,6 +141,10 @@ class LoginView extends StatelessWidget {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error de conexión: $e')),
       );
+    } finally {
+      setState(() {
+        _isLoading = false; // Ocultar el indicador de carga
+      });
     }
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:myapp/bll/ParcelaBll.dart';
+import 'package:myapp/dto/Analisis.dart';
 
 class AnalisisListView extends StatefulWidget {
   AnalisisListView({super.key});
@@ -9,23 +11,63 @@ class AnalisisListView extends StatefulWidget {
 }
 
 class _AnalisisListView extends State<AnalisisListView> {
-  final List<Analisis> analisis = [
-    Analisis('Analisis-005', DateTime(2024, 6, 15), 'TIPOA'),
-    Analisis('Analisis-006', DateTime(2024, 7, 15), 'TIPOB'),
-    Analisis('Analisis-007', DateTime(2024, 6, 16), 'TIPOA'),
-    Analisis('Analisis-008', DateTime(2024, 7, 18), 'TIPOB'),
-  ];
+  List<Analisis> analisis = [];
+  late String parcela;
+  late String user_id;
+  bool _isLoading = false; // Estado de carga
+  bool _hasLoaded = false; // Estado para evitar múltiples cargas
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+    parcela = args?['parcela'] as String? ?? '';
+    user_id = args?['user_id'] as String? ?? '';
+
+    if (parcela.isNotEmpty && user_id.isNotEmpty && !_hasLoaded) {
+      _loadAnalisisByParcela(parcela, user_id);
+    }
+  }
+
+  _loadAnalisisByParcela(String parcela, String user_id) async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    ParcelaBll analisisBll = ParcelaBll();
+    try {
+      List<Analisis> listAnalisis = await analisisBll.getAnalisisByParcela(user_id, parcela);
+      setState(() {
+        analisis = listAnalisis;
+        _hasLoaded = true; // Marcar que se ha cargado
+      });
+    } catch (error) {
+      print('Error cargando analisis: $error');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:
-            Text('Analisis de Parcela', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+        title: Text('Analisis de Parcela', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
         backgroundColor: Colors.green[400],
         elevation: 0,
       ),
-      body: Container(
+      body: _isLoading
+          ? Center(
+        child: CircularProgressIndicator(),
+      )
+          : Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -38,8 +80,7 @@ class _AnalisisListView extends State<AnalisisListView> {
           itemBuilder: (context, index) {
             final monitoreo = analisis[index];
             return Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: Card(
                 elevation: 5,
                 child: Container(
@@ -58,7 +99,7 @@ class _AnalisisListView extends State<AnalisisListView> {
                       child: Icon(Icons.bookmark, color: Colors.amber[800]),
                     ),
                     title: Text(
-                      monitoreo.nombre,
+                      monitoreo.tipo,
                       style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -68,10 +109,14 @@ class _AnalisisListView extends State<AnalisisListView> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: 5),
-                        Text(DateFormat('dd/MM/yyyy').format(monitoreo.fecha), 
-                              style: TextStyle(color: Colors.grey[600])),
-                        Text('${monitoreo.tipo}',
-                            style: TextStyle(color: Colors.grey[600])),
+                        Text(
+                          'Proximo monitoreo: ${DateFormat('dd/MM/yyyy').format(DateTime.parse(monitoreo.fecha.isNotEmpty ? monitoreo.fecha : DateTime.now().toString()))}',
+                          style: TextStyle(color: Colors.grey[600]),
+                        ),
+                        Text(
+                          '${monitoreo.id}',
+                          style: TextStyle(color: Colors.grey[600]),
+                        ),
                       ],
                     ),
                     trailing: ElevatedButton.icon(
@@ -82,11 +127,10 @@ class _AnalisisListView extends State<AnalisisListView> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
                         ),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       ),
                       onPressed: () {
-                        Navigator.of(context).pushNamed('/evaluacion');
+                        Navigator.of(context).pushNamed('/evaluacion', arguments: {'analisis': monitoreo});
                       },
                     ),
                   ),
@@ -98,12 +142,4 @@ class _AnalisisListView extends State<AnalisisListView> {
       ),
     );
   }
-}
-
-class Analisis {
-  final String nombre;
-  final DateTime fecha;
-  final String tipo;
-
-  Analisis(this.nombre, this.fecha, this.tipo);
 }

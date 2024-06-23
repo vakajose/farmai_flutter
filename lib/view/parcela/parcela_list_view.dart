@@ -107,7 +107,7 @@ class _ParcelaListViewState extends State<ParcelaListView> {
                               ),
 
                               Text(
-                                'Proximo monitoreo: ${DateFormat('dd/MM/yyyy').format(DateTime.parse(parcela.proximoMonitoreo ?? DateTime.now().toString()))}', 
+                                'Proximo monitoreo: ${DateFormat('dd/MM/yyyy').format(DateTime.parse(parcela.proximoMonitoreo.isEmpty?parcela.proximoMonitoreo:DateTime.now().toString()))}',
                                 style: TextStyle(color: Colors.grey[600])
                               ),
                             ],
@@ -126,7 +126,7 @@ class _ParcelaListViewState extends State<ParcelaListView> {
                               if (this.tipo == 1) {
                                 _navigateToInfoParcela(parcela);
                               } else {
-                                Navigator.of(context).pushNamed('/analisis', arguments: 
+                                Navigator.of(context).pushNamed('/analisis', arguments:
                                   {
                                     'parcela': parcela.id,
                                     'user_id': user_id,

@@ -119,10 +119,10 @@ class _HomeViewState extends State<HomeView> {
         scrollDirection: Axis.horizontal,
       ),
       items: [
-        'https://via.placeholder.com/800x400.png?text=Image+1',
-        'https://via.placeholder.com/800x400.png?text=Image+2',
-        'https://via.placeholder.com/800x400.png?text=Image+3',
-      ].map((url) {
+        'assets/images/banner1.jpg',
+        'assets/images/banner2.jpg',
+        'assets/images/banner3.jpg',
+      ].map((assetPath) {
         return Builder(
           builder: (BuildContext context) {
             return Container(
@@ -141,8 +141,8 @@ class _HomeViewState extends State<HomeView> {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(15),
-                child: Image.network(
-                  url,
+                child: Image.asset(
+                  assetPath,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -168,7 +168,7 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
         child: Text(
-          'Bienvenido $user_id a la Página Principal',
+          'Bienvenido $user_id a FarmAI',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -195,8 +195,8 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
         child: Text(
-          'Aquí puedes ver un carrusel de imágenes y navegar usando el Menú.',
-          style: TextStyle(fontSize: 16, color: Colors.green[800]),
+          'FarmAI revoluciona la agricultura con monitoreo satelital de vanguardia. Optimiza tus cultivos y parcelas con datos precisos en tiempo real. Toma decisiones informadas, mejora tu productividad y cultiva de manera más inteligente y sostenible. Con FarmAI, el futuro de la agricultura está en tus manos.',
+          style: TextStyle(fontSize: 16, color: Colors.grey[800]),
           textAlign: TextAlign.center,
         ),
       ),

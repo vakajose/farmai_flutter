@@ -1,39 +1,43 @@
 class Parcela {
-  String? nombre;
-  List<Ubicacion>? ubicacion;
-  List<String>? tipoMonitoreo;
-  String? proximoMonitoreo;
-  String? id;
-  String? usuarioId;
+  String nombre;
+  List<Ubicacion> ubicacion;
+  List<String> tipoMonitoreo;
+  String proximoMonitoreo;
+  String id;
+  String usuarioId;
 
-  Parcela(
-      {this.nombre,
-      this.ubicacion,
-      this.tipoMonitoreo,
-      this.proximoMonitoreo,
-      this.id,
-      this.usuarioId});
+  Parcela({
+    String? nombre,
+    List<Ubicacion>? ubicacion,
+    List<String>? tipoMonitoreo,
+    String? proximoMonitoreo,
+    String? id,
+    String? usuarioId
+  })  : this.nombre = nombre ?? '',
+        this.ubicacion = ubicacion ?? [],
+        this.tipoMonitoreo = tipoMonitoreo ?? [],
+        this.proximoMonitoreo = proximoMonitoreo ?? '',
+        this.id = id ?? '',
+        this.usuarioId = usuarioId ?? '';
 
-  Parcela.fromJson(Map<String, dynamic> json) {
-    nombre = json['nombre'];
-    if (json['ubicacion'] != null) {
-      ubicacion = <Ubicacion>[];
-      json['ubicacion'].forEach((v) {
-        ubicacion!.add(new Ubicacion.fromJson(v));
-      });
-    }
-    tipoMonitoreo = json['tipo_monitoreo'].cast<String>();
-    proximoMonitoreo = json['proximo_monitoreo'];
-    id = json['id'];
-    usuarioId = json['usuario_id'];
-  }
+  Parcela.fromJson(Map<String, dynamic> json)
+      : nombre = json['nombre'] ?? '',
+        ubicacion = (json['ubicacion'] as List<dynamic>?)
+            ?.map((v) => Ubicacion.fromJson(v))
+            .toList() ??
+            [],
+        tipoMonitoreo = (json['tipo_monitoreo'] as List<dynamic>?)
+            ?.map((v) => v as String)
+            .toList() ??
+            [],
+        proximoMonitoreo = json['proximo_monitoreo'] ?? '',
+        id = json['id'] ?? '',
+        usuarioId = json['usuario_id'] ?? '';
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['nombre'] = this.nombre;
-    if (this.ubicacion != null) {
-      data['ubicacion'] = this.ubicacion!.map((v) => v.toJson()).toList();
-    }
+    data['ubicacion'] = this.ubicacion.map((v) => v.toJson()).toList();
     data['tipo_monitoreo'] = this.tipoMonitoreo;
     data['proximo_monitoreo'] = this.proximoMonitoreo;
     data['id'] = this.id;
@@ -48,10 +52,9 @@ class Ubicacion {
 
   Ubicacion({this.latitude, this.longitude});
 
-  Ubicacion.fromJson(Map<String, dynamic> json) {
-    latitude = json['latitude'];
-    longitude = json['longitude'];
-  }
+  Ubicacion.fromJson(Map<String, dynamic> json)
+      : latitude = json['latitude'] as double?,
+        longitude = json['longitude'] as double?;
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
