@@ -11,6 +11,9 @@ class ParcelaMapsView extends StatefulWidget {
 }
 
 class _ParcelaMapsViewState extends State<ParcelaMapsView> {
+  
+  // Manejador del tipo de mapa
+  MapType _currentMapType = MapType.normal;
   late Parcela _parcela;
   late String user_id;
   bool _isLoading = true;
@@ -36,7 +39,6 @@ class _ParcelaMapsViewState extends State<ParcelaMapsView> {
     location = locations[random.nextInt(locations.length)];
     crop = crops[random.nextInt(crops.length)];
   }
-
   
 
   @override
@@ -57,8 +59,6 @@ class _ParcelaMapsViewState extends State<ParcelaMapsView> {
    return ubicacion.map((u) => LatLng(u.latitude!, u.longitude!)).toList();
   }
 
-  // Manejador del tipo de mapa
-  MapType _currentMapType = MapType.normal;
 
   @override
   Widget build(BuildContext context) {
