@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:myapp/dto/Parcela.dart';
+import 'dart:math';
 
 class ParcelaMapsView extends StatefulWidget {
   const ParcelaMapsView({super.key});
@@ -9,7 +11,10 @@ class ParcelaMapsView extends StatefulWidget {
 }
 
 class _ParcelaMapsViewState extends State<ParcelaMapsView> {
-  final List<LatLng> parcelaCoordinates = [
+  late Parcela _parcela;
+  late String user_id;
+  bool _isLoading = true;
+  List<LatLng> parcelaCoordinates = [
     LatLng(-17.66446874030909, -62.6648270500189),
     LatLng(-17.665197267022634, -62.67213832878201),
     LatLng(-17.67025133986496, -62.671564895153466),
@@ -19,6 +24,38 @@ class _ParcelaMapsViewState extends State<ParcelaMapsView> {
     LatLng(-17.66419554203054, -62.66229438482692),
     LatLng(-17.66446874030909, -62.6648270500189)
   ];
+  late int area;
+  late String location;
+  late String crop;
+  final List<String> locations = ['Cotoca', 'Santa Cruz', 'San Julian', 'Pailas'];
+  final List<String> crops = ['Maíz', 'Trigo', 'Soja', 'Girasol'];
+
+  void _generateRandomValues() {
+    final random = Random();
+    area = random.nextInt(491) + 10; // 10-500
+    location = locations[random.nextInt(locations.length)];
+    crop = crops[random.nextInt(crops.length)];
+  }
+
+  
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+    _parcela = args?['parcela'] as Parcela;
+    if (_parcela != null && _isLoading) {
+       parcelaCoordinates = convertirUbicacionALatLng(_parcela.ubicacion);
+      _isLoading = false;
+    }
+  }
+
+  List<LatLng> convertirUbicacionALatLng(List<Ubicacion>? ubicacion) {
+    if (ubicacion == null) {
+      return [];
+    }
+   return ubicacion.map((u) => LatLng(u.latitude!, u.longitude!)).toList();
+  }
 
   // Manejador del tipo de mapa
   MapType _currentMapType = MapType.normal;

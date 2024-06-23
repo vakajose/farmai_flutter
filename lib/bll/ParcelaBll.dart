@@ -1,0 +1,28 @@
+
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:myapp/Constant/ConstantService.dart';
+import 'package:myapp/dto/Parcela.dart';
+import 'package:http/http.dart' as http;
+
+class ParcelaBll {
+  final String api = ConstanstAplication.SERVER_API;
+
+  Future<List<Parcela>> getParcelaByUsuarioId(String usuarioId) async{
+    final url = '$api/parcelas/$usuarioId';  
+
+    final response = await http.get(Uri.parse(url));
+
+    if(response.statusCode == 200){
+      var jsonResponse = jsonDecode(response.body);
+      List<Parcela> parcelas = [];
+      for(var item in jsonResponse){
+        parcelas.add(Parcela.fromJson(item));
+      }
+      return parcelas;
+    }else{
+      throw HttpException('Failed to load parcelas',uri:  Uri.parse(url));
+    }
+  }
+}
