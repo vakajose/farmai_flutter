@@ -142,13 +142,7 @@ class _ParcelaListViewState extends State<ParcelaListView> {
                 },
               ),
             ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        backgroundColor: Colors.green[600],
-        onPressed: () {
-          // Acción para agregar nueva parcela
-        },
-      ),
+    
     );
   }
 

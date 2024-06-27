@@ -27,8 +27,25 @@ class ParcelaBll {
     }
   }
 
-  Future<List<Analisis>> getAnalisisByParcela(String usuarioId, String parcela_id) async{
-    final url = '$api/analisis/$usuarioId/$parcela_id';
+  Future<List<Analisis>> getAnalisisByParcela(String usuarioId, String parcelaId) async {
+  final url = '$api/analisis/$usuarioId/$parcelaId';
+  final response = await http.get(Uri.parse(url));
+
+  if (response.statusCode == 200) {
+    // Decode the response body with UTF-8
+    var jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    List<Analisis> analisis = [];
+    for (var item in jsonResponse) {
+      analisis.add(Analisis.fromJson(item));
+    }
+    return analisis;
+  } else {
+    throw HttpException('Failed to load parcelas', uri: Uri.parse(url));
+  }
+}
+
+    Future<List<Analisis>> getAnalisisWithIA(String usuarioId, String parcelaId,String tipo) async{
+    final url = '$api/analisis/ejecutar/$usuarioId/$parcelaId/$tipo';
 
     final response = await http.get(Uri.parse(url));
 

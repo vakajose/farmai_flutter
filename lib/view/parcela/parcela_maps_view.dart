@@ -11,8 +11,6 @@ class ParcelaMapsView extends StatefulWidget {
 }
 
 class _ParcelaMapsViewState extends State<ParcelaMapsView> {
-  
-  // Manejador del tipo de mapa
   MapType _currentMapType = MapType.satellite;
   late Parcela _parcela;
   late String user_id;
@@ -39,6 +37,7 @@ class _ParcelaMapsViewState extends State<ParcelaMapsView> {
     location = locations[random.nextInt(locations.length)];
     crop = crops[random.nextInt(crops.length)];
   }
+
   List<LatLng> convertirUbicacionALatLng(List<Ubicacion>? ubicacion) {
     if (ubicacion == null) {
       return [];
@@ -58,7 +57,7 @@ class _ParcelaMapsViewState extends State<ParcelaMapsView> {
     final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
     _parcela = args?['parcela'] as Parcela;
     if (_parcela != null && _isLoading) {
-       parcelaCoordinates = convertirUbicacionALatLng(_parcela.ubicacion);
+      parcelaCoordinates = convertirUbicacionALatLng(_parcela.ubicacion);
       _isLoading = false;
     }
   }
@@ -83,7 +82,7 @@ class _ParcelaMapsViewState extends State<ParcelaMapsView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            _buildMap(parcelaPolygon),
+            Expanded(child: _buildMap(parcelaPolygon)),  // Ajuste aquí
             SizedBox(height: 16.0),
             _buildMapTypeSelector(),
             SizedBox(height: 16.0),
@@ -96,7 +95,6 @@ class _ParcelaMapsViewState extends State<ParcelaMapsView> {
 
   Widget _buildMap(Polygon parcelaPolygon) {
     return Container(
-      height: 300.0,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12.0),
         border: Border.all(color: Colors.green, width: 2.0),
@@ -110,7 +108,7 @@ class _ParcelaMapsViewState extends State<ParcelaMapsView> {
             zoom: 15.0,
           ),
           polygons: {parcelaPolygon},
-          mapType: _currentMapType, // Usar el tipo de mapa seleccionado
+          mapType: _currentMapType,
           onMapCreated: (GoogleMapController controller) {
             Future.delayed(Duration(milliseconds: 300), () {
               _setMapFitToPolygon(controller, parcelaPolygon);
@@ -177,19 +175,19 @@ class _ParcelaMapsViewState extends State<ParcelaMapsView> {
           ),
           SizedBox(height: 8.0),
           Text(
-              'Área: $area Hectáreas',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Ubicación: $location',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Cultivo: $crop',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
-            ),
+            'Área: $area Hectáreas',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
+          ),
+          SizedBox(height: 10),
+          Text(
+            'Ubicación: $location',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
+          ),
+          SizedBox(height: 10),
+          Text(
+            'Cultivo: $crop',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
+          ),
         ],
       ),
     );

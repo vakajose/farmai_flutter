@@ -80,7 +80,8 @@ class _EvaluacionViewState extends State<EvaluacionView> {
     final List<String> _carouselImages = [];
 
       for (var imagen in analisis.imagenes) {
-        _carouselImages.add(urlApi + imagen.ruta);
+        print(urlApi + imagen.ruta);
+        _carouselImages.add(urlApi +'/'+ imagen.ruta);
       }
 
     return CarouselSlider(
@@ -126,33 +127,9 @@ class _EvaluacionViewState extends State<EvaluacionView> {
   }
 
   Widget _buildInfoCard(String evaluacionMarkdown) {
+    print(evaluacionMarkdown);
     final String _markdownData = evaluacionMarkdown;
-    /*'''
-# Análisis NDVI: Campo de Maíz
 
-## Datos del campo
-- Cultivo: Maíz
-- Área total: 50 hectáreas
-
-## Resultados NDVI
-- Rango: 0.2 - 0.8
-- Promedio: 0.6
-
-## Distribución
-| Rango NDVI | Porcentaje del campo | Interpretación           |
-|------------|----------------------|--------------------------|
-| 0.2 - 0.4  | 20%                  | Vegetación estresada     |
-| 0.5 - 0.7  | 60%                  | Vegetación saludable     |
-| 0.7 - 0.8  | 20%                  | Vegetación muy vigorosa  |
-
-## Interpretación
-- Mayoría del cultivo en buenas condiciones
-- Área significativa con posible estrés hídrico o deficiencia nutricional
-- Zonas identificadas de alto rendimiento potencial
-
-## Acción recomendada
-Investigar y tratar las áreas de bajo NDVI, ajustando riego o fertilización en zonas específicas.
-  ''';*/
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
